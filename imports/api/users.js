@@ -14,31 +14,33 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'users.addFriend': (userId, friendId) => {
-    check(userId, String);
-    check(friendId, String);
-
-    // Make sure the user is logged in before inserting a user
-    if (!Meteor.userId()) {
+  'users.addFriend': (friendId) => {
+    const userId = Meteor.userId();
+    // Make sure the user is logged in before adding a friend
+    if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
-
+    check(userId, String);
+    check(friendId, String);
     Users.upsert(userId, {
-      $push: {
+      $addToSet: {
         friendIds: friendId,
       },
     });
   },
-  'users.removeFriend': (userId) => {
+  'users.removeFriend': (friendId) => {
+    const userId = Meteor.userId();
     check(userId, String);
-
-    const user = Users.findOne(userId);
-    if (user.isPrivate && user.owner !== Meteor.userId()) {
-      // If the user is isPrivate, make sure only the owner can delete it
+    check(friendId, String);
+    // Make sure the user is logged in before adding a friend
+    if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
-
-    Users.remove(userId);
+    Users.upsert(userId, {
+      $pull: {
+        friendIds: friendId,
+      },
+    });
   },
   'users.setChecked': (userId, setChecked) => {
     check(userId, String);

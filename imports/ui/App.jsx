@@ -62,12 +62,10 @@ class App extends Component {
   }
 
   render() {
-    const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const { incompleteCount, currentUser, allUsers } = this.props;
     const userList = allUsers.map(user => (
       <User
         key={user._id}
-        currentUserId={currentUserId}
         user={user}
         isFriend={isFriend(currentUser.friendIds, user._id)}
       />
