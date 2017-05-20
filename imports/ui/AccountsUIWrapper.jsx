@@ -19,7 +19,7 @@ class AccountsUIWrapper extends Component {
     // Just render a placeholder container that will be filled in
     const { currentUser } = this.props;
     return (
-      <div>
+      <div id="login-info">
         {currentUser && <span>Signed in as </span>}
         <span ref={(c) => { this.container = c; }} />
       </div>

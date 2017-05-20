@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
+import { Button } from 'react-materialize';
 
 // Task component - represents a single todo item
 export default class Task extends Component {
@@ -37,9 +38,9 @@ export default class Task extends Component {
 
     return (
       <li className={taskClassName}>
-        <button className="delete" onClick={this.deleteThisTask}>
+        <Button className="delete" onClick={this.deleteThisTask}>
           &times;
-        </button>
+        </Button>
 
         <input
           type="checkbox"
@@ -49,9 +50,9 @@ export default class Task extends Component {
         />
 
         { this.props.showPrivateButton ? (
-          <button className="toggle-isPrivate" onClick={this.togglePrivate}>
+          <Button className="toggle-isPrivate" onClick={this.togglePrivate}>
             { isPrivate ? 'Private' : 'Public' }
-          </button>
+          </Button>
         ) : ''}
 
         <span className="text">

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
+import { Card } from 'react-materialize';
 
 import Tasks from '../api/tasks.js';
 import Users from '../api/users';
@@ -73,7 +74,7 @@ class App extends Component {
     const isChatting = this.state.receiver;
     return (
       <div className="container">
-        <div className="panel">
+        <Card className="panel">
           <header>
             <h1>Meteor Chat {incompleteCount}</h1>
 
@@ -94,10 +95,10 @@ class App extends Component {
               />
             </form> : ''
           }
-        </div>
-        <div className="panel">
+        </Card>
+        <Card className="panel">
           {this.renderUsers()}
-        </div>
+        </Card>
       </div>
     );
   }
@@ -119,7 +120,7 @@ export default createContainer(() => {
   Meteor.subscribe('users');
 
   return {
-    tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
+    tasks: Tasks.find({}, { sort: { createdAt: 1 } }).fetch(),
     incompleteCount: Tasks.find({ isChecked: { $ne: true } }).count(),
     currentUser: Meteor.user(),
     allUsers: Users.find({}).fetch(),

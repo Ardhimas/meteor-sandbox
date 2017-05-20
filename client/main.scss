@@ -1,19 +1,17 @@
 /* CSS declarations go here */
+
 body {
   font-family: sans-serif;
   background-color: #315481;
   background-image: linear-gradient(to bottom, #315481, #918e82 100%);
   background-attachment: fixed;
-
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-
   padding: 0;
   margin: 0;
-
   font-size: 14px;
 }
 
@@ -25,18 +23,19 @@ body {
 }
 
 .panel {
-  width: 50%;
+  width: calc(50% - 20px);
+  margin: 10px;
   vertical-align: top;
   display: inline-block;
-  background: white;
-  /*box-sizing: border-box;*/
+  box-sizing: border-box;
 }
 
 header {
-  background: #d2edf4;
-  background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
-  padding: 20px 15px 15px 15px;
   position: relative;
+  #login-info {
+    display: inline-block;
+    float: right;
+  }
 }
 
 h1 {
@@ -45,19 +44,6 @@ h1 {
   margin-bottom: 10px;
   display: inline-block;
   margin-right: 1em;
-}
-
-.new-task input {
-  box-sizing: border-box;
-  padding: 10px;
-  background: transparent;
-  border: none;
-  width: 100%;
-  font-size: 1em;
-}
-
-.new-task input:focus{
-  outline: 0;
 }
 
 ul {
@@ -81,27 +67,22 @@ li {
   list-style: none;
   padding: 15px;
   border-bottom: #eee solid 1px;
-}
-
-li .text {
-  margin-left: 10px;
-}
-
-li.friend {
-  color: #1abc9c;
-}
-
-li.checked {
-  color: #888;
-}
-
-li.checked .text {
-  text-decoration: line-through;
-}
-
-li.private {
-  background: #eee;
-  border-color: #ddd;
+  .text {
+    margin-left: 10px;
+  }
+  &.friend {
+    color: #1abc9c;
+  }
+  &.checked {
+    color: #888;
+    .text {
+      text-decoration: line-through;
+    }
+  }
+  &.private {
+    background: #eee;
+    border-color: #ddd;
+  }
 }
 
 header .hide-completed {
@@ -116,12 +97,10 @@ header .hide-completed {
   li {
     padding: 12px 15px;
   }
-
   .search {
     width: 150px;
     clear: both;
   }
-
   .new-task input {
     padding-bottom: 5px;
   }
