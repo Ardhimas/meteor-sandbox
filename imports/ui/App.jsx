@@ -7,7 +7,10 @@ import Tasks from '../api/tasks.js';
 import Users from '../api/users';
 
 import Task from './Task.jsx';
+import User from './User.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+
+import { isFriend } from '../utils.js';
 
 // App component - represents the whole app
 class App extends Component {
@@ -42,7 +45,7 @@ class App extends Component {
   renderTasks() {
     let filteredTasks = this.props.tasks;
     if (this.state.hideCompleted) {
-      filteredTasks = filteredTasks.filter(task => !task.checked);
+      filteredTasks = filteredTasks.filter(task => !task.isChecked);
     }
     return filteredTasks.map((task) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
@@ -59,9 +62,15 @@ class App extends Component {
   }
 
   render() {
+    const currentUserId = this.props.currentUser && this.props.currentUser._id;
     const { incompleteCount, currentUser, allUsers } = this.props;
     const userList = allUsers.map(user => (
-      <div>{user.username}</div>
+      <User
+        key={user._id}
+        currentUserId={currentUserId}
+        user={user}
+        isFriend={isFriend(currentUser.friendIds, user._id)}
+      />
     ));
     return (
       <div className="container">
@@ -111,7 +120,7 @@ export default createContainer(() => {
 
   return {
     tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
+    incompleteCount: Tasks.find({ isChecked: { $ne: true } }).count(),
     currentUser: Meteor.user(),
     allUsers: Users.find({}).fetch(),
   };

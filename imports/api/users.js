@@ -14,56 +14,55 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'users.find': (text, receiverId) => {
-    check(text, String);
+  'users.addFriend': (userId, friendId) => {
+    check(userId, String);
+    check(friendId, String);
 
-    // Make sure the user is logged in before inserting a task
+    // Make sure the user is logged in before inserting a user
     if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Users.insert({
-      text,
-      receiverId,
-      createdAt: new Date(),
-      owner: Meteor.userId(),
-      username: Meteor.user().username,
+    Users.upsert(userId, {
+      $push: {
+        friendIds: friendId,
+      },
     });
   },
-  'users.remove': (taskId) => {
-    check(taskId, String);
+  'users.removeFriend': (userId) => {
+    check(userId, String);
 
-    const task = Users.findOne(taskId);
-    if (task.private && task.owner !== Meteor.userId()) {
-      // If the task is private, make sure only the owner can delete it
+    const user = Users.findOne(userId);
+    if (user.isPrivate && user.owner !== Meteor.userId()) {
+      // If the user is isPrivate, make sure only the owner can delete it
       throw new Meteor.Error('not-authorized');
     }
 
-    Users.remove(taskId);
+    Users.remove(userId);
   },
-  'users.setChecked': (taskId, setChecked) => {
-    check(taskId, String);
+  'users.setChecked': (userId, setChecked) => {
+    check(userId, String);
     check(setChecked, Boolean);
 
-    const task = Users.findOne(taskId);
-    if (task.private && task.owner !== Meteor.userId()) {
-      // If the task is private, make sure only the owner can check it off
+    const user = Users.findOne(userId);
+    if (user.isPrivate && user.owner !== Meteor.userId()) {
+      // If the user is isPrivate, make sure only the owner can check it off
       throw new Meteor.Error('not-authorized');
     }
 
-    Users.update(taskId, { $set: { checked: setChecked } });
+    Users.update(userId, { $set: { isChecked: setChecked } });
   },
-  'users.setPrivate': (taskId, setToPrivate) => {
-    check(taskId, String);
+  'users.setPrivate': (userId, setToPrivate) => {
+    check(userId, String);
     check(setToPrivate, Boolean);
 
-    const task = Users.findOne(taskId);
+    const user = Users.findOne(userId);
 
-    // Make sure only the task owner can make a task private
-    if (task.owner !== Meteor.userId()) {
+    // Make sure only the user owner can make a user isPrivate
+    if (user.owner !== Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Users.update(taskId, { $set: { private: setToPrivate } });
+    Users.update(userId, { $set: { isPrivate: setToPrivate } });
   },
 });
