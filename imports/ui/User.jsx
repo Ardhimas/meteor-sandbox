@@ -11,6 +11,7 @@ export default class User extends Component {
     this.removeFriend = this.removeFriend.bind(this);
     this.togglePrivate = this.togglePrivate.bind(this);
     this.toggleChecked = this.toggleChecked.bind(this);
+    this.handleStartChat = this.handleStartChat.bind(this);
   }
   toggleChecked() {
     // Set the isChecked property to the opposite of its current value
@@ -29,6 +30,10 @@ export default class User extends Component {
     Meteor.call('users.setPrivate', this.props.user._id, !this.props.user.isPrivate);
   }
 
+  handleStartChat() {
+    this.props.setReceiverId();
+  }
+
   render() {
     const { username } = this.props.user;
     const { isFriend } = this.props;
@@ -40,6 +45,9 @@ export default class User extends Component {
 
     return (
       <li className={userClassName}>
+        <button className="toggle-isPrivate" onClick={this.props.setReceiverId}>
+          Chat
+        </button>
         <button className="delete" onClick={isFriend ? this.removeFriend : this.addFriend}>
           {isFriend ? '×' : '+'}
         </button>
@@ -56,4 +64,5 @@ User.propTypes = {
   // We can use propTypes to indicate it is required
   user: PropTypes.object.isRequired,
   isFriend: PropTypes.bool.isRequired,
+  setReceiverId: PropTypes.func.isRequired,
 };

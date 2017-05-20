@@ -19,15 +19,10 @@ class App extends Component {
 
     this.state = {
       hideCompleted: false,
+      receiver: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  toggleHideCompleted() {
-    this.setState({
-      hideCompleted: !this.state.hideCompleted,
-    });
   }
 
   handleSubmit(event) {
@@ -36,7 +31,7 @@ class App extends Component {
     // Find the text field via the React ref
     const text = this.textInput.value.trim();
 
-    Meteor.call('tasks.insert', text);
+    Meteor.call('tasks.insert', text, this.state.receiver._id);
 
     // Clear form
     this.textInput.value = '';
@@ -49,7 +44,7 @@ class App extends Component {
     }
     return filteredTasks.map((task) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const showPrivateButton = task.owner === currentUserId;
+      const showPrivateButton = task.ownerId === currentUserId;
 
       return (
         <Task
@@ -61,15 +56,21 @@ class App extends Component {
     });
   }
 
-  render() {
-    const { incompleteCount, currentUser, allUsers } = this.props;
-    const userList = allUsers.map(user => (
+  renderUsers() {
+    const { allUsers, currentUser } = this.props;
+    return allUsers.map(user => (
       <User
         key={user._id}
         user={user}
+        setReceiverId={() => this.setState({ receiver: user })}
         isFriend={isFriend(currentUser.friendIds, user._id)}
       />
     ));
+  }
+
+  render() {
+    const { incompleteCount, currentUser } = this.props;
+    const isChatting = this.state.receiver;
     return (
       <div className="container">
         <div className="panel">
@@ -87,14 +88,15 @@ class App extends Component {
             <form className="new-task" onSubmit={this.handleSubmit} >
               <input
                 type="text"
+                disabled={!isChatting}
                 ref={(c) => { this.textInput = c; }}
-                placeholder="Send message to"
+                placeholder={isChatting ? 'Send message to ' + this.state.receiver.username : 'Select a user to begin chatting'}
               />
             </form> : ''
           }
         </div>
         <div className="panel">
-          {userList}
+          {this.renderUsers()}
         </div>
       </div>
     );

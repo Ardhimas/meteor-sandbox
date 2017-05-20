@@ -47,8 +47,8 @@ Meteor.methods({
     check(setChecked, Boolean);
 
     const user = Users.findOne(userId);
-    if (user.isPrivate && user.owner !== Meteor.userId()) {
-      // If the user is isPrivate, make sure only the owner can check it off
+    if (user.isPrivate && user.ownerId !== Meteor.userId()) {
+      // If the user is isPrivate, make sure only the ownerId can check it off
       throw new Meteor.Error('not-authorized');
     }
 
@@ -60,8 +60,8 @@ Meteor.methods({
 
     const user = Users.findOne(userId);
 
-    // Make sure only the user owner can make a user isPrivate
-    if (user.owner !== Meteor.userId()) {
+    // Make sure only the user ownerId can make a user isPrivate
+    if (user.ownerId !== Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 

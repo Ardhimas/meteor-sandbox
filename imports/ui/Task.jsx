@@ -11,6 +11,7 @@ export default class Task extends Component {
     this.togglePrivate = this.togglePrivate.bind(this);
     this.toggleChecked = this.toggleChecked.bind(this);
   }
+
   toggleChecked() {
     // Set the isChecked property to the opposite of its current value
     Meteor.call('tasks.setChecked', this.props.task._id, !this.props.task.isChecked);

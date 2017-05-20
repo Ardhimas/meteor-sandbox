@@ -12,8 +12,8 @@ if (Meteor.isServer) {
   Meteor.publish('tasks', function tasksPublication() {
     return Tasks.find({
       $or: [
-        { isPrivate: false },
-        { owner: this.userId },
+        { receiverId: this.userId },
+        { ownerId: this.userId },
       ],
     });
   });
@@ -32,7 +32,7 @@ Meteor.methods({
       text,
       receiverId,
       createdAt: new Date(),
-      owner: Meteor.userId(),
+      ownerId: Meteor.userId(),
       username: Meteor.user().username,
     });
   },
@@ -40,8 +40,8 @@ Meteor.methods({
     check(taskId, String);
 
     const task = Tasks.findOne(taskId);
-    if (task.isPrivate && task.owner !== Meteor.userId()) {
-      // If the task is isPrivate, make sure only the owner can delete it
+    if (task.isPrivate && task.ownerId !== Meteor.userId()) {
+      // If the task is isPrivate, make sure only the ownerId can delete it
       throw new Meteor.Error('not-authorized');
     }
 
@@ -52,8 +52,8 @@ Meteor.methods({
     check(setChecked, Boolean);
 
     const task = Tasks.findOne(taskId);
-    if (task.isPrivate && task.owner !== Meteor.userId()) {
-      // If the task is isPrivate, make sure only the owner can check it off
+    if (task.isPrivate && task.ownerId !== Meteor.userId()) {
+      // If the task is isPrivate, make sure only the ownerId can check it off
       throw new Meteor.Error('not-authorized');
     }
 
@@ -65,8 +65,8 @@ Meteor.methods({
 
     const task = Tasks.findOne(taskId);
 
-    // Make sure only the task owner can make a task isPrivate
-    if (task.owner !== Meteor.userId()) {
+    // Make sure only the task ownerId can make a task isPrivate
+    if (task.ownerId !== Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 
