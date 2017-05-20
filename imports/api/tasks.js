@@ -20,7 +20,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  'tasks.insert'(text) {
+  'tasks.insert': (text) => {
     check(text, String);
 
     // Make sure the user is logged in before inserting a task
@@ -35,7 +35,7 @@ Meteor.methods({
       username: Meteor.user().username,
     });
   },
-  'tasks.remove'(taskId) {
+  'tasks.remove': (taskId) => {
     check(taskId, String);
 
     const task = Tasks.findOne(taskId);
@@ -46,7 +46,7 @@ Meteor.methods({
 
     Tasks.remove(taskId);
   },
-  'tasks.setChecked'(taskId, setChecked) {
+  'tasks.setChecked': (taskId, setChecked) => {
     check(taskId, String);
     check(setChecked, Boolean);
 
@@ -58,7 +58,7 @@ Meteor.methods({
 
     Tasks.update(taskId, { $set: { checked: setChecked } });
   },
-  'tasks.setPrivate'(taskId, setToPrivate) {
+  'tasks.setPrivate': (taskId, setToPrivate) => {
     check(taskId, String);
     check(setToPrivate, Boolean);
 

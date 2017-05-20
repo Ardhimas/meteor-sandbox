@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 
-import { Tasks } from '../api/tasks.js';
+import Tasks from '../api/tasks.js';
 
 import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
@@ -61,30 +61,30 @@ class App extends Component {
     return (
       <div className="container">
         <header>
-          <h1>Todo List {this.props.incompleteCount}</h1>
+          <h1>Meteor Chat {this.props.incompleteCount}</h1>
 
-          <AccountsUIWrapper />
-
-          { this.props.currentUser ?
-            <form className="new-task" onSubmit={this.handleSubmit} >
-              <input
-                type="text"
-                ref={(c) => { this.textInput = c; }}
-                placeholder="Type to add new tasks"
-              />
-            </form> : ''
-          }
+          <AccountsUIWrapper currentUser={this.props.currentUser} />
         </header>
         <ul>
           {this.renderTasks()}
         </ul>
+
+        { this.props.currentUser ?
+          <form className="new-task" onSubmit={this.handleSubmit} >
+            <input
+              type="text"
+              ref={(c) => { this.textInput = c; }}
+              placeholder="Send message to"
+            />
+          </form> : ''
+        }
       </div>
     );
   }
 }
 
 App.defaultProps = {
-  currentUser: {},
+  currentUser: null,
 };
 
 App.propTypes = {
