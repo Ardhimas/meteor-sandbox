@@ -5,6 +5,11 @@
   },
   "rules": {
     "import/no-extraneous-dependencies": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "react/forbid-prop-types": "off",
+    "no-underscore-dangle": "off"
+  },
+  "globals": {
+    "document": true
   }
 }

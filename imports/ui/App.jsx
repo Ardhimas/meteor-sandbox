@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 
@@ -16,6 +16,26 @@ class App extends Component {
     this.state = {
       hideCompleted: false,
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  toggleHideCompleted() {
+    this.setState({
+      hideCompleted: !this.state.hideCompleted,
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    // Find the text field via the React ref
+    const text = this.textInput.value.trim();
+
+    Meteor.call('tasks.insert', text);
+
+    // Clear form
+    this.textInput.value = '';
   }
 
   renderTasks() {
@@ -37,46 +57,19 @@ class App extends Component {
     });
   }
 
-  toggleHideCompleted() {
-    this.setState({
-      hideCompleted: !this.state.hideCompleted,
-    });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-
-    // Find the text field via the React ref
-    const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-
-    Meteor.call('tasks.insert', text);
-
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
-  }
-
   render() {
     return (
       <div className="container">
         <header>
           <h1>Todo List {this.props.incompleteCount}</h1>
-          <label className="hide-completed">
-            <input
-              type="checkbox"
-              readOnly
-              checked={this.state.hideCompleted}
-              onClick={this.toggleHideCompleted.bind(this)}
-            />
-            Hide Completed Tasks
-          </label>
 
           <AccountsUIWrapper />
 
           { this.props.currentUser ?
-            <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+            <form className="new-task" onSubmit={this.handleSubmit} >
               <input
                 type="text"
-                ref="textInput"
+                ref={(c) => { this.textInput = c; }}
                 placeholder="Type to add new tasks"
               />
             </form> : ''
@@ -90,6 +83,10 @@ class App extends Component {
   }
 }
 
+App.defaultProps = {
+  currentUser: {},
+};
+
 App.propTypes = {
   tasks: PropTypes.array.isRequired,
   incompleteCount: PropTypes.number.isRequired,
@@ -98,6 +95,7 @@ App.propTypes = {
 
 export default createContainer(() => {
   Meteor.subscribe('tasks');
+  // console.log('Meteor.user()', Meteor.user());
 
   return {
     tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
