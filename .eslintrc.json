@@ -1,0 +1,10 @@
+{
+  "extends": "airbnb",
+  "settings": {
+    "import/resolver": "meteor"
+  },
+  "rules": {
+    "import/no-extraneous-dependencies": "off",
+    "import/extensions": "off"
+  }
+}
