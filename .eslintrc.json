@@ -4,10 +4,25 @@
     "import/resolver": "meteor"
   },
   "rules": {
+    "object-shorthand": [
+      "warn",
+      "always",
+      {
+        "avoidQuotes": true
+      }
+    ],
+    "no-underscore-dangle": "off",
     "import/no-extraneous-dependencies": "off",
     "import/extensions": "off",
-    "react/forbid-prop-types": "off",
-    "no-underscore-dangle": "off"
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": [
+          ":chai"
+        ]
+      }
+    ],
+    "react/forbid-prop-types": "off"
   },
   "globals": {
     "document": true
