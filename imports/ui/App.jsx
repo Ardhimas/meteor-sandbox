@@ -4,6 +4,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 
 import Tasks from '../api/tasks.js';
+import Users from '../api/users';
 
 import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
@@ -58,26 +59,36 @@ class App extends Component {
   }
 
   render() {
+    const { incompleteCount, currentUser, allUsers } = this.props;
+    const userList = allUsers.map(user => (
+      <div>{user.username}</div>
+    ));
     return (
       <div className="container">
-        <header>
-          <h1>Meteor Chat {this.props.incompleteCount}</h1>
+        <div className="panel">
+          <header>
+            <h1>Meteor Chat {incompleteCount}</h1>
 
-          <AccountsUIWrapper currentUser={this.props.currentUser} />
-        </header>
-        <ul>
-          {this.renderTasks()}
-        </ul>
+            <AccountsUIWrapper currentUser={currentUser} />
 
-        { this.props.currentUser ?
-          <form className="new-task" onSubmit={this.handleSubmit} >
-            <input
-              type="text"
-              ref={(c) => { this.textInput = c; }}
-              placeholder="Send message to"
-            />
-          </form> : ''
-        }
+          </header>
+          <ul>
+            {this.renderTasks()}
+          </ul>
+
+          { currentUser ?
+            <form className="new-task" onSubmit={this.handleSubmit} >
+              <input
+                type="text"
+                ref={(c) => { this.textInput = c; }}
+                placeholder="Send message to"
+              />
+            </form> : ''
+          }
+        </div>
+        <div className="panel">
+          {userList}
+        </div>
       </div>
     );
   }
@@ -91,15 +102,17 @@ App.propTypes = {
   tasks: PropTypes.array.isRequired,
   incompleteCount: PropTypes.number.isRequired,
   currentUser: PropTypes.object,
+  allUsers: PropTypes.array.isRequired,
 };
 
 export default createContainer(() => {
   Meteor.subscribe('tasks');
-  // console.log('Meteor.user()', Meteor.user());
+  Meteor.subscribe('users');
 
   return {
     tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
     incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
     currentUser: Meteor.user(),
+    allUsers: Users.find({}).fetch(),
   };
 }, App);

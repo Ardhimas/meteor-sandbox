@@ -18,10 +18,18 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  width: 100%;
   margin: 0 auto;
   min-height: 100%;
+  position: relative;
+}
+
+.panel {
+  width: 50%;
+  vertical-align: top;
+  display: inline-block;
   background: white;
+  /*box-sizing: border-box;*/
 }
 
 header {
