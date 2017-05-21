@@ -5,7 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { Row, Col } from 'react-materialize';
 
 import MessagesPanel from './MessagesPanel.jsx';
-import FriendsPanel from './FriendsPanel.jsx';
+import UsersPanel from './UsersPanel.jsx';
 
 // App component - represents the whole app
 class App extends Component {
@@ -33,7 +33,7 @@ class App extends Component {
           />
         </Col>
         <Col s={12} m={4}>
-          <FriendsPanel
+          <UsersPanel
             setReceiver={receiver => this.setState({ receiver })}
           />
         </Col>

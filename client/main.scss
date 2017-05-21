@@ -1,4 +1,4 @@
-/* CSS declarations go here */
+// Global Styling
 
 body {
   background-color: #315481;
@@ -11,31 +11,83 @@ body {
   right: 0;
   padding: 0;
   margin: 0;
+
+  h1 {
+    font-size: 1.5em;
+    margin: 0;
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-right: 1em;
+  }
+
+  footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+  }
+
+  #render-target {
+    height: 100%;
+
+    .container {
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      min-height: 100%;
+      position: relative;
+
+      .panel {
+        max-height: calc(100% - 20px);
+        margin: 10px;
+        vertical-align: top;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
+        ul.list {
+          margin: 0;
+          padding: 0;
+          overflow: scroll;
+          flex-grow: 1;
+          display: flex;
+          flex-flow: column-reverse;
+
+          #sign-in {
+            text-align: center;
+          }
+
+          li {
+            position: relative;
+            list-style: none;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
 }
 
-#render-target {
-  height: 100%;
-  .container {
-    width: 100%;
+// MessagePanel Styling
+
+#message-panel {
+
+  .message-list {
     height: 100%;
-    margin: 0 auto;
-    min-height: 100%;
-    position: relative;
-    .panel {
-      max-height: calc(100% - 20px);
-      margin: 10px;
-      vertical-align: top;
-      box-sizing: border-box;
+
+    > div {
       display: flex;
-      flex-direction: column;
-      .message-list {
-        height: 100%;
-        ul {
-          background-image: url('meteor-icon.svg');
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: contain;
-        }
+      flex-flow: column;
+      align-items: stretch;
+      height: 100%;
+      justify-content: space-between;
+
+      ul {
+        background-image: url('meteor-icon.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+
         li {
           display: inline-table;
           position: relative;
@@ -44,103 +96,44 @@ body {
           border: 1px solid;
           border-radius: 10px;
           margin: 5px;
+
           &.right {
             margin-left: auto;
           }
+
           &.left {
             margin-right: auto;
           }
         }
-        > div {
-          display: flex;
-          flex-flow: column;
-          align-items: stretch;
-          height: 100%;
-          justify-content: space-between;
-        }
       }
-      .btn-navigation {
-        float: right;
+
+      #login-info {
+        display: inline-block;
       }
     }
-  }
-}
 
-.new-task input {
-  margin-bottom: 0;
-}
-
-header {
-  position: relative;
-  #login-info {
-    display: inline-block;
-  }
-}
-
-h1 {
-  font-size: 1.5em;
-  margin: 0;
-  margin-bottom: 10px;
-  display: inline-block;
-  margin-right: 1em;
-}
-
-ul.list {
-  margin: 0;
-  padding: 0;
-  overflow: scroll;
-  flex-grow: 1;
-  display: flex;
-  flex-flow: column-reverse;
-
-  #sign-in {
-    text-align: center;
-  }
-
-  li {
-    position: relative;
-    list-style: none;
-    padding: 10px;
-    .text {
-      margin-left: 10px;
-    }
-    &.checked {
-      color: #888;
-      .text {
-        text-decoration: line-through;
-      }
-    }
-    &.private {
-      background: #eee;
-      border-color: #ddd;
+    input {
+      margin-bottom: 0;
     }
   }
 }
 
-.delete {
-  float: right;
-  font-weight: bold;
-  font-size: 1.5em;
-  line-height: 1.5em;
-}
+// FriendsPanel Styling
 
-footer {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  padding: 10px;
-}
+#users-panel {
 
-.toggle-private {
-  margin-left: 5px;
-}
-
-@media (max-width: 600px) {
-  li {
-    padding: 12px 15px;
+  .btn-navigation {
+    float: right;
   }
-  .search {
-    width: 150px;
-    clear: both;
+
+  .text {
+    margin-left: 10px;
+  }
+
+  .list-action {
+    float: right;
+    font-weight: bold;
+    font-size: 1.5em;
+    line-height: 1.5em;
   }
 }

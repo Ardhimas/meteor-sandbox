@@ -63,7 +63,7 @@ class MessagesPanel extends Component {
         </ul>
 
         { currentUser &&
-          <form className="new-message" onSubmit={this.handleSubmit} >
+          <form onSubmit={this.handleSubmit} >
             <input
               type="text"
               disabled={!isChatting}

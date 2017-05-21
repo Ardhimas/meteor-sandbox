@@ -41,7 +41,7 @@ export default class User extends Component {
         />
         <Button
           floating
-          className="delete"
+          className="list-action"
           onClick={isFriend ? this.removeFriend : this.addFriend}
           icon={isFriend ? 'close' : 'add'}
         />

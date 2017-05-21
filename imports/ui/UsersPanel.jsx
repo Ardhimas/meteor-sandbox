@@ -53,7 +53,7 @@ class App extends Component {
     const isAddingFriends = selectedTab === 'Add Friends';
     return (
       currentUser &&
-        <Card id="" className="panel">
+        <Card id="users-panel" className="panel">
           <header>
             <h1>{selectedTab}</h1>
             <Button
