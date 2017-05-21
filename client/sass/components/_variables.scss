@@ -92,7 +92,7 @@ $button-floating-radius: 50% !default;
 // ==========================================================================
 
 $card-padding: 24px !default;
-$card-bg-color: #fff !default;
+$card-bg-color: rgba(255,255,255,0.25) !default;
 $card-link-color: color("orange", "accent-2") !default;
 $card-link-color-light: lighten($card-link-color, 20%) !default;
 
@@ -280,7 +280,7 @@ $toast-text-color: #fff !default;
 // 20. Typography
 // ==========================================================================
 
-$off-black: rgba(0, 0, 0, 0.87) !default;
+$off-black: rgba(255, 255, 255, 0.87) !default;
 // Header Styles
 $h1-fontsize: 4.2rem !default;
 $h2-fontsize: 3.56rem !default;

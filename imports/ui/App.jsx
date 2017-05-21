@@ -99,12 +99,16 @@ class App extends Component {
     const isAddingFriends = this.state.selectedTab === 'Add Friends';
     return (
       <div className="container">
+        <div id="stars" />
+        <div id="stars2" />
+        <div id="stars3" />
         <Card textClassName="message-list" className="panel large">
           <header>
             <h1>Meteor Chat {incompleteCount} Messages</h1>
             <AccountsUIWrapper currentUser={currentUser} />
           </header>
           <ul className="list">
+            <div className="background" />
             {this.renderTasks()}
           </ul>
 
@@ -135,6 +139,7 @@ class App extends Component {
             {this.renderUsers()}
           </ul>
         </Card>
+        <footer>Made with ❤ by Ardhimas</footer>
       </div>
     );
   }

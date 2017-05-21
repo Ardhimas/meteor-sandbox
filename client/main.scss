@@ -3,7 +3,7 @@
 body {
   font-family: sans-serif;
   background-color: #315481;
-  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
+  background-image: radial-gradient(ellipse at bottom, #315481, black 100%);
   background-attachment: fixed;
   position: absolute;
   top: 0;
@@ -35,6 +35,22 @@ body {
       flex-direction: column;
       .message-list {
         height: 100%;
+        .background {
+          background-image: url('meteor-icon.svg');
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: contain;
+          fill: white;
+          filter: opacity(30%);
+          height: 250px;
+          width: 250px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+        }
         > div {
           display: flex;
           flex-flow: column;
@@ -82,7 +98,6 @@ ul.list {
     position: relative;
     list-style: none;
     padding: 15px;
-    border-bottom: #eee solid 1px;
     .text {
       margin-left: 10px;
     }
@@ -104,6 +119,13 @@ ul.list {
   font-weight: bold;
   font-size: 1.5em;
   line-height: 1.5em;
+}
+
+footer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding: 20px;
 }
 
 header .hide-completed {
