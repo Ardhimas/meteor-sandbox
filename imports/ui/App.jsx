@@ -4,14 +4,12 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Card, Button, Row, Col } from 'react-materialize';
 
-import Messages from '../api/messages.js';
 import Users from '../api/users';
 
-import Message from './Message.jsx';
+import MessagesPanel from './MessagesPanel.jsx';
 import User from './User.jsx';
-import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-import { filterFriends, filterNotFriends, filterActiveMessages } from '../utils.js';
+import { filterFriends, filterNotFriends } from '../utils.js';
 
 // App component - represents the whole app
 class App extends Component {
@@ -24,45 +22,11 @@ class App extends Component {
       selectedTab: 'Friends',
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeTab = this.handleChangeTab.bind(this);
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-
-    // Find the text field via the React ref
-    const text = this.textInput.value.trim();
-
-    Meteor.call('messages.insert', text, this.state.receiver._id);
-
-    // Clear form
-    this.textInput.value = '';
   }
 
   handleChangeTab(newTab) {
     this.setState({ selectedTab: newTab });
-  }
-
-  renderMessages() {
-    if (this.state.receiver) {
-      const filteredMessages = filterActiveMessages(this.props.messages, this.state.receiver._id);
-      return filteredMessages.map((message) => {
-        const currentUserId = this.props.currentUser && this.props.currentUser._id;
-        const showPrivateButton = message.ownerId === currentUserId;
-
-        return (
-          <Message
-            key={message._id}
-            message={message}
-            position={showPrivateButton ? 'left' : 'right'}
-          />
-        );
-      });
-    }
-    return (
-      <noscript />
-    );
   }
 
   renderUsers() {
@@ -95,8 +59,8 @@ class App extends Component {
 
   render() {
     const { currentUser } = this.props;
-    const isChatting = this.state.receiver;
-    const receiverName = isChatting && this.state.receiver.username;
+    const isChatting = !!this.state.receiver;
+    const { _id, username } = isChatting && this.state.receiver;
     const isAddingFriends = this.state.selectedTab === 'Add Friends';
     return (
       <Row className="container">
@@ -104,27 +68,11 @@ class App extends Component {
         <div id="stars2" />
         <div id="stars3" />
         <Col s={12} m={6} offset={currentUser ? 'm1' : 'm3'}>
-          <Card id="message-panel" textClassName="message-list" className="panel large">
-            <header>
-              <h1>Meteor Chat {isChatting ? `with ${receiverName}` : ''}</h1>
-              <AccountsUIWrapper currentUser={currentUser} />
-            </header>
-            <ul className="list">
-              {!currentUser && <span id="sign-in">Sign in to Chat</span>}
-              {this.renderMessages()}
-            </ul>
-
-            { currentUser &&
-              <form className="new-message" onSubmit={this.handleSubmit} >
-                <input
-                  type="text"
-                  disabled={!isChatting}
-                  ref={(c) => { this.textInput = c; }}
-                  placeholder={isChatting ? `Send message to ${receiverName}` : 'Select a user to begin chatting'}
-                />
-              </form>
-            }
-          </Card>
+          <MessagesPanel
+            receiverId={_id}
+            receiverName={username}
+            isChatting={isChatting}
+          />
         </Col>
         <Col s={12} m={4}>
           { currentUser &&
@@ -157,17 +105,13 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-  messages: PropTypes.array.isRequired,
   currentUser: PropTypes.object,
   allUsers: PropTypes.array.isRequired,
 };
 
 export default createContainer(() => {
-  Meteor.subscribe('messages');
   Meteor.subscribe('users');
   return {
-    messages: Messages.find({}, { sort: { createdAt: -1 } }).fetch(),
-    unreadCount: Messages.find({ isChecked: { $ne: true } }).count(),
     currentUser: Meteor.user(),
     allUsers: Users.find({}).fetch(),
   };
