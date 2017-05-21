@@ -40,6 +40,9 @@
     .card-content {
       max-height: 100%;
       overflow: hidden;
+      ~ .card-action {
+        max-height: calc(100% - 70px)
+      }
     }
     .card-action {
       position: absolute;

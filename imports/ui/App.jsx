@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-import { Card } from 'react-materialize';
+import { Card, Tabs, Tab } from 'react-materialize';
 
 import Tasks from '../api/tasks.js';
 import Users from '../api/users';
@@ -11,7 +11,7 @@ import Task from './Task.jsx';
 import User from './User.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-import { isFriend } from '../utils.js';
+import { isFriend, filterActiveTasks } from '../utils.js';
 
 // App component - represents the whole app
 class App extends Component {
@@ -21,9 +21,11 @@ class App extends Component {
     this.state = {
       hideCompleted: false,
       receiver: null,
+      selectedTab: 'Friends',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChangeTab = this.handleChangeTab.bind(this);
   }
 
   handleSubmit(event) {
@@ -38,23 +40,29 @@ class App extends Component {
     this.textInput.value = '';
   }
 
-  renderTasks() {
-    let filteredTasks = this.props.tasks;
-    if (this.state.hideCompleted) {
-      filteredTasks = filteredTasks.filter(task => !task.isChecked);
-    }
-    return filteredTasks.map((task) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const showPrivateButton = task.ownerId === currentUserId;
+  handleChangeTab(newTab) {
+    this.setState({ selectedTab: newTab });
+  }
 
-      return (
-        <Task
-          key={task._id}
-          task={task}
-          showPrivateButton={showPrivateButton}
-        />
-      );
-    });
+  renderTasks() {
+    if (this.state.receiver) {
+      const filteredTasks = filterActiveTasks(this.props.tasks, this.state.receiver._id);
+      return filteredTasks.map((task) => {
+        const currentUserId = this.props.currentUser && this.props.currentUser._id;
+        const showPrivateButton = task.ownerId === currentUserId;
+
+        return (
+          <Task
+            key={task._id}
+            task={task}
+            showPrivateButton={showPrivateButton}
+          />
+        );
+      });
+    }
+    return (
+      <noscript />
+    );
   }
 
   renderUsers() {
@@ -74,14 +82,12 @@ class App extends Component {
     const isChatting = this.state.receiver;
     return (
       <div className="container">
-        <Card className="panel">
+        <Card textClassName="message-list" className="panel large">
           <header>
-            <h1>Meteor Chat {incompleteCount}</h1>
-
+            <h1>Meteor Chat {incompleteCount} Messages</h1>
             <AccountsUIWrapper currentUser={currentUser} />
-
           </header>
-          <ul>
+          <ul className="list">
             {this.renderTasks()}
           </ul>
 
@@ -97,7 +103,12 @@ class App extends Component {
           }
         </Card>
         <Card className="panel">
-          {this.renderUsers()}
+          <header>
+            <h1>{this.state.selectedTab}</h1>
+          </header>
+          <ul className="list">
+            {this.renderUsers()}
+          </ul>
         </Card>
       </div>
     );
@@ -118,9 +129,8 @@ App.propTypes = {
 export default createContainer(() => {
   Meteor.subscribe('tasks');
   Meteor.subscribe('users');
-
   return {
-    tasks: Tasks.find({}, { sort: { createdAt: 1 } }).fetch(),
+    tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
     incompleteCount: Tasks.find({ isChecked: { $ne: true } }).count(),
     currentUser: Meteor.user(),
     allUsers: Users.find({}).fetch(),
