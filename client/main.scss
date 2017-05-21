@@ -43,6 +43,9 @@ body {
           justify-content: space-between;
         }
       }
+      .btn-navigation {
+        float: right;
+      }
     }
   }
 }
@@ -83,9 +86,6 @@ ul.list {
     .text {
       margin-left: 10px;
     }
-    &.friend {
-      color: #1abc9c;
-    }
     &.checked {
       color: #888;
       .text {
@@ -102,11 +102,8 @@ ul.list {
 .delete {
   float: right;
   font-weight: bold;
-  background: none;
   font-size: 1.5em;
   line-height: 1.5em;
-  border: none;
-  position: relative;
 }
 
 header .hide-completed {

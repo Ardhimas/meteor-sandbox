@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-import { Card, Tabs, Tab } from 'react-materialize';
+import { Card, Button } from 'react-materialize';
 
 import Tasks from '../api/tasks.js';
 import Users from '../api/users';
@@ -11,7 +11,7 @@ import Task from './Task.jsx';
 import User from './User.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-import { isFriend, filterActiveTasks } from '../utils.js';
+import { filterFriends, filterNotFriends, filterActiveTasks } from '../utils.js';
 
 // App component - represents the whole app
 class App extends Component {
@@ -67,19 +67,36 @@ class App extends Component {
 
   renderUsers() {
     const { allUsers, currentUser } = this.props;
-    return allUsers.map(user => (
-      <User
-        key={user._id}
-        user={user}
-        setReceiverId={() => this.setState({ receiver: user })}
-        isFriend={isFriend(currentUser.friendIds, user._id)}
-      />
-    ));
+    if (currentUser) {
+      if (this.state.selectedTab === 'Friends') {
+        const friendUsers = filterFriends(currentUser.friendIds, allUsers);
+        return friendUsers.map(user => (
+          <User
+            key={user._id}
+            user={user}
+            setReceiverId={() => this.setState({ receiver: user })}
+            isFriend
+          />
+        ));
+      } else if (this.state.selectedTab === 'Add Friends') {
+        const friendUsers = filterNotFriends(currentUser.friendIds, allUsers);
+        return friendUsers.map(user => (
+          <User
+            key={user._id}
+            user={user}
+            setReceiverId={() => this.setState({ receiver: user })}
+            isFriend={false}
+          />
+        ));
+      }
+    }
+    return <noscript />;
   }
 
   render() {
     const { incompleteCount, currentUser } = this.props;
     const isChatting = this.state.receiver;
+    const isAddingFriends = this.state.selectedTab === 'Add Friends';
     return (
       <div className="container">
         <Card textClassName="message-list" className="panel large">
@@ -91,7 +108,7 @@ class App extends Component {
             {this.renderTasks()}
           </ul>
 
-          { currentUser ?
+          { currentUser &&
             <form className="new-task" onSubmit={this.handleSubmit} >
               <input
                 type="text"
@@ -99,12 +116,20 @@ class App extends Component {
                 ref={(c) => { this.textInput = c; }}
                 placeholder={isChatting ? 'Send message to ' + this.state.receiver.username : 'Select a user to begin chatting'}
               />
-            </form> : ''
+            </form>
           }
         </Card>
         <Card className="panel">
           <header>
             <h1>{this.state.selectedTab}</h1>
+            <Button
+              floating
+              className="btn-navigation"
+              icon={isAddingFriends ? 'chevron_left' : 'add'}
+              onClick={() => this.setState({ selectedTab: (isAddingFriends ? 'Friends' : 'Add Friends') })}
+            >
+              Add Friends
+            </Button>
           </header>
           <ul className="list">
             {this.renderUsers()}

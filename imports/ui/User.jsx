@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
+import { Button } from 'react-materialize';
 
 // User component - represents a single todo item
 export default class User extends Component {
@@ -45,12 +46,17 @@ export default class User extends Component {
 
     return (
       <li className={userClassName}>
-        <button className="toggle-isPrivate" onClick={this.props.setReceiverId}>
-          Chat
-        </button>
-        <button className="delete" onClick={isFriend ? this.removeFriend : this.addFriend}>
-          {isFriend ? '×' : '+'}
-        </button>
+        <Button
+          floating
+          onClick={this.props.setReceiverId}
+          icon="chat"
+        />
+        <Button
+          floating
+          className="delete"
+          onClick={isFriend ? this.removeFriend : this.addFriend}
+          icon={isFriend ? 'close' : 'add'}
+        />
         <span className="text">
           <strong>{username}</strong>
         </span>

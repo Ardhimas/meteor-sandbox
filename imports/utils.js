@@ -1,5 +1,13 @@
-export const isFriend = (friendIds = [], userId) => (
+const isFriend = (friendIds = [], userId) => (
   friendIds.indexOf(userId) > -1
+);
+
+export const filterFriends = (friendIds = [], allUsers) => (
+  allUsers.filter(user => isFriend(friendIds, user._id))
+);
+
+export const filterNotFriends = (friendIds = [], allUsers) => (
+  allUsers.filter(user => !isFriend(friendIds, user._id))
 );
 
 export const filterActiveTasks = (tasks, receiverId) => (
