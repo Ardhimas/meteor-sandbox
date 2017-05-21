@@ -74,6 +74,9 @@ header {
   position: relative;
   #login-info {
     display: inline-block;
+    float: left;
+  }
+  h1 {
     float: right;
   }
 }
@@ -128,12 +131,8 @@ ul.list {
 footer {
   position: fixed;
   right: 0;
-  top: 0;
-  padding: 20px;
-}
-
-header .hide-completed {
-  float: right;
+  bottom: 0;
+  padding: 10px;
 }
 
 .toggle-private {
