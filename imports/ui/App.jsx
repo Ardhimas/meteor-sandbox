@@ -14,6 +14,11 @@ class App extends Component {
     this.state = {
       receiver: null,
     };
+    this.setReceiver = this.setReceiver.bind(this);
+  }
+
+  setReceiver(receiver) {
+    this.setState({ receiver });
   }
 
   render() {
@@ -34,7 +39,7 @@ class App extends Component {
         </Col>
         <Col s={12} m={4}>
           <UsersPanel
-            setReceiver={receiver => this.setState({ receiver })}
+            setReceiver={this.setReceiver}
           />
         </Col>
         <footer>Made with ❤ by Ardhimas</footer>

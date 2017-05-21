@@ -17,10 +17,17 @@ class App extends Component {
     this.state = {
       selectedTab: 'Friends',
     };
+    this.setSelectedTab = this.setSelectedTab.bind(this);
+  }
+
+  setSelectedTab(event) {
+    event.preventDefault();
+    const selectedTab = this.state.selectedTab === 'Friends' ? 'Add Friends' : 'Friends';
+    this.setState({ selectedTab });
   }
 
   renderUsers() {
-    const { allUsers, currentUser } = this.props;
+    const { allUsers, currentUser, setReceiver } = this.props;
     if (currentUser) {
       if (this.state.selectedTab === 'Friends') {
         const friendUsers = filterFriends(currentUser.friendIds, allUsers);
@@ -28,7 +35,7 @@ class App extends Component {
           <User
             key={user._id}
             user={user}
-            setReceiverId={() => this.props.setReceiver(user)}
+            setReceiver={setReceiver}
             isFriend
           />
         ));
@@ -38,7 +45,7 @@ class App extends Component {
           <User
             key={user._id}
             user={user}
-            setReceiverId={() => this.props.setReceiver(user)}
+            setReceiver={setReceiver}
             isFriend={false}
           />
         ));
@@ -60,7 +67,7 @@ class App extends Component {
               floating
               className="btn-navigation"
               icon={isAddingFriends ? 'chevron_left' : 'add'}
-              onClick={() => this.setState({ selectedTab: (isAddingFriends ? 'Friends' : 'Add Friends') })}
+              onClick={this.setSelectedTab}
             />
           </header>
           <ul className="list">

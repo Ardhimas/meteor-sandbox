@@ -4,13 +4,17 @@ import { Meteor } from 'meteor/meteor';
 import classnames from 'classnames';
 import { Button } from 'react-materialize';
 
-// User component - represents a single todo item
 export default class User extends Component {
   constructor() {
     super();
+    this.setReceiver = this.setReceiver.bind(this);
     this.addFriend = this.addFriend.bind(this);
     this.removeFriend = this.removeFriend.bind(this);
-    this.handleStartChat = this.handleStartChat.bind(this);
+  }
+
+  setReceiver(event) {
+    event.preventDefault();
+    this.props.setReceiver(this.props.user);
   }
 
   addFriend() {
@@ -21,13 +25,8 @@ export default class User extends Component {
     Meteor.call('users.removeFriend', this.props.user._id);
   }
 
-  handleStartChat() {
-    this.props.setReceiverId();
-  }
-
   render() {
-    const { username } = this.props.user;
-    const { isFriend } = this.props;
+    const { isFriend, user: { username } } = this.props;
     const userClassName = classnames({
       friend: isFriend,
     });
@@ -36,7 +35,7 @@ export default class User extends Component {
       <li className={userClassName}>
         <Button
           floating
-          onClick={this.props.setReceiverId}
+          onClick={this.setReceiver}
           icon="chat"
         />
         <Button
@@ -54,9 +53,7 @@ export default class User extends Component {
 }
 
 User.propTypes = {
-  // This component gets the user to display through a React prop.
-  // We can use propTypes to indicate it is required
   user: PropTypes.object.isRequired,
   isFriend: PropTypes.bool.isRequired,
-  setReceiverId: PropTypes.func.isRequired,
+  setReceiver: PropTypes.func.isRequired,
 };

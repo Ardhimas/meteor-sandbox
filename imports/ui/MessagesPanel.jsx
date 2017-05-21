@@ -21,7 +21,6 @@ class MessagesPanel extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    // Find the text field via the React ref
     const text = this.textInput.value.trim();
 
     Meteor.call('messages.insert', text, this.props.receiverId);
