@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-import { Card, Button } from 'react-materialize';
+import { Card, Button, Row, Col } from 'react-materialize';
 
 import Tasks from '../api/tasks.js';
 import Users from '../api/users';
@@ -99,49 +99,53 @@ class App extends Component {
     const receiverName = isChatting && this.state.receiver.username;
     const isAddingFriends = this.state.selectedTab === 'Add Friends';
     return (
-      <div className="container">
+      <Row className="container">
         <div id="stars" />
         <div id="stars2" />
         <div id="stars3" />
-        <Card textClassName="message-list" className="panel large">
-          <header>
-            <h1>Meteor Chat {isChatting ? `with ${receiverName}` : ''}</h1>
-            <AccountsUIWrapper currentUser={currentUser} />
-          </header>
-          <ul className="list">
-            {!currentUser && <span id="sign-in">Sign in to Chat</span>}
-            {this.renderTasks()}
-          </ul>
+        <Col s={12} m={6}>
+          <Card textClassName="message-list" className="panel large">
+            <header>
+              <h1>Meteor Chat {isChatting ? `with ${receiverName}` : ''}</h1>
+              <AccountsUIWrapper currentUser={currentUser} />
+            </header>
+            <ul className="list">
+              {!currentUser && <span id="sign-in">Sign in to Chat</span>}
+              {this.renderTasks()}
+            </ul>
 
-          { currentUser &&
-            <form className="new-task" onSubmit={this.handleSubmit} >
-              <input
-                type="text"
-                disabled={!isChatting}
-                ref={(c) => { this.textInput = c; }}
-                placeholder={isChatting ? `Send message to ${receiverName}` : 'Select a user to begin chatting'}
-              />
-            </form>
-          }
-        </Card>
-        <Card className="panel">
-          <header>
-            <h1>{this.state.selectedTab}</h1>
-            <Button
-              floating
-              className="btn-navigation"
-              icon={isAddingFriends ? 'chevron_left' : 'add'}
-              onClick={() => this.setState({ selectedTab: (isAddingFriends ? 'Friends' : 'Add Friends') })}
-            >
-              Add Friends
-            </Button>
-          </header>
-          <ul className="list">
-            {this.renderUsers()}
-          </ul>
-        </Card>
+            { currentUser &&
+              <form className="new-task" onSubmit={this.handleSubmit} >
+                <input
+                  type="text"
+                  disabled={!isChatting}
+                  ref={(c) => { this.textInput = c; }}
+                  placeholder={isChatting ? `Send message to ${receiverName}` : 'Select a user to begin chatting'}
+                />
+              </form>
+            }
+          </Card>
+        </Col>
+        <Col s={12} m={6}>
+          <Card className="panel">
+            <header>
+              <h1>{this.state.selectedTab}</h1>
+              <Button
+                floating
+                className="btn-navigation"
+                icon={isAddingFriends ? 'chevron_left' : 'add'}
+                onClick={() => this.setState({ selectedTab: (isAddingFriends ? 'Friends' : 'Add Friends') })}
+              >
+                Add Friends
+              </Button>
+            </header>
+            <ul className="list">
+              {this.renderUsers()}
+            </ul>
+          </Card>
+        </Col>
         <footer>Made with ❤ by Ardhimas</footer>
-      </div>
+      </Row>
     );
   }
 }
