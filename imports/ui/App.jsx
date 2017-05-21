@@ -55,7 +55,7 @@ class App extends Component {
           <Task
             key={task._id}
             task={task}
-            showPrivateButton={showPrivateButton}
+            position={showPrivateButton ? 'left' : 'right'}
           />
         );
       });
@@ -96,6 +96,7 @@ class App extends Component {
   render() {
     const { incompleteCount, currentUser } = this.props;
     const isChatting = this.state.receiver;
+    const receiverName = isChatting && this.state.receiver.username;
     const isAddingFriends = this.state.selectedTab === 'Add Friends';
     return (
       <div className="container">
@@ -104,11 +105,11 @@ class App extends Component {
         <div id="stars3" />
         <Card textClassName="message-list" className="panel large">
           <header>
-            <h1>Meteor Chat {incompleteCount} Messages</h1>
+            <h1>Meteor Chat {isChatting ? `with ${receiverName}` : ''}</h1>
             <AccountsUIWrapper currentUser={currentUser} />
           </header>
           <ul className="list">
-            <div className="background" />
+            {!currentUser && <span id="sign-in">Sign in to Chat</span>}
             {this.renderTasks()}
           </ul>
 
@@ -118,7 +119,7 @@ class App extends Component {
                 type="text"
                 disabled={!isChatting}
                 ref={(c) => { this.textInput = c; }}
-                placeholder={isChatting ? 'Send message to ' + this.state.receiver.username : 'Select a user to begin chatting'}
+                placeholder={isChatting ? `Send message to ${receiverName}` : 'Select a user to begin chatting'}
               />
             </form>
           }

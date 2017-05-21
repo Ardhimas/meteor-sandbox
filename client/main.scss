@@ -12,7 +12,6 @@ body {
   right: 0;
   padding: 0;
   margin: 0;
-  font-size: 14px;
 }
 
 #render-target {
@@ -35,21 +34,26 @@ body {
       flex-direction: column;
       .message-list {
         height: 100%;
-        .background {
+        ul {
           background-image: url('meteor-icon.svg');
           background-position: center;
           background-repeat: no-repeat;
           background-size: contain;
-          fill: white;
-          filter: opacity(30%);
-          height: 250px;
-          width: 250px;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          margin: auto;
+        }
+        li {
+          display: inline-table;
+          position: relative;
+          list-style: none;
+          padding: 10px;
+          border: 1px solid;
+          border-radius: 10px;
+          margin: 5px;
+          &.right {
+            margin-left: auto;
+          }
+          &.left {
+            margin-right: auto;
+          }
         }
         > div {
           display: flex;
@@ -94,10 +98,14 @@ ul.list {
   display: flex;
   flex-flow: column-reverse;
 
+  #sign-in {
+    text-align: center;
+  }
+
   li {
     position: relative;
     list-style: none;
-    padding: 15px;
+    padding: 10px;
     .text {
       margin-left: 10px;
     }

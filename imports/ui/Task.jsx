@@ -29,6 +29,7 @@ export default class Task extends Component {
 
   render() {
     const { isChecked, isPrivate, username, text } = this.props.task;
+    const { position } = this.props;
     // Give tasks a different className when they are isChecked off,
     // so that we can style them nicely in CSS
     const taskClassName = classnames({
@@ -37,26 +38,9 @@ export default class Task extends Component {
     });
 
     return (
-      <li className={taskClassName}>
-        <Button className="delete" onClick={this.deleteThisTask}>
-          &times;
-        </Button>
-
-        <input
-          type="checkbox"
-          readOnly
-          checked={isChecked}
-          onClick={this.toggleChecked}
-        />
-
-        { this.props.showPrivateButton ? (
-          <Button className="toggle-isPrivate" onClick={this.togglePrivate}>
-            { isPrivate ? 'Private' : 'Public' }
-          </Button>
-        ) : ''}
-
-        <span className="text">
-          <strong>{username}</strong>: {text}
+      <li className={position}>
+        <span>
+          {text}
         </span>
       </li>
     );
@@ -67,5 +51,5 @@ Task.propTypes = {
   // This component gets the task to display through a React prop.
   // We can use propTypes to indicate it is required
   task: PropTypes.object.isRequired,
-  showPrivateButton: PropTypes.bool.isRequired,
+  position: PropTypes.bool.isRequired,
 };
