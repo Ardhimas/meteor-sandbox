@@ -10,6 +10,6 @@ export const filterNotFriends = (friendIds = [], allUsers) => (
   allUsers.filter(user => !isFriend(friendIds, user._id))
 );
 
-export const filterActiveTasks = (tasks, receiverId) => (
-  tasks.filter(task => (task.ownerId === receiverId || task.receiverId === receiverId))
+export const filterActiveMessages = (messages, receiverId) => (
+  messages.filter(message => (message.ownerId === receiverId || message.receiverId === receiverId))
 );

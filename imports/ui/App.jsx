@@ -4,14 +4,14 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Card, Button, Row, Col } from 'react-materialize';
 
-import Tasks from '../api/tasks.js';
+import Messages from '../api/messages.js';
 import Users from '../api/users';
 
-import Task from './Task.jsx';
+import Message from './Message.jsx';
 import User from './User.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 
-import { filterFriends, filterNotFriends, filterActiveTasks } from '../utils.js';
+import { filterFriends, filterNotFriends, filterActiveMessages } from '../utils.js';
 
 // App component - represents the whole app
 class App extends Component {
@@ -34,7 +34,7 @@ class App extends Component {
     // Find the text field via the React ref
     const text = this.textInput.value.trim();
 
-    Meteor.call('tasks.insert', text, this.state.receiver._id);
+    Meteor.call('messages.insert', text, this.state.receiver._id);
 
     // Clear form
     this.textInput.value = '';
@@ -44,17 +44,17 @@ class App extends Component {
     this.setState({ selectedTab: newTab });
   }
 
-  renderTasks() {
+  renderMessages() {
     if (this.state.receiver) {
-      const filteredTasks = filterActiveTasks(this.props.tasks, this.state.receiver._id);
-      return filteredTasks.map((task) => {
+      const filteredMessages = filterActiveMessages(this.props.messages, this.state.receiver._id);
+      return filteredMessages.map((message) => {
         const currentUserId = this.props.currentUser && this.props.currentUser._id;
-        const showPrivateButton = task.ownerId === currentUserId;
+        const showPrivateButton = message.ownerId === currentUserId;
 
         return (
-          <Task
-            key={task._id}
-            task={task}
+          <Message
+            key={message._id}
+            message={message}
             position={showPrivateButton ? 'left' : 'right'}
           />
         );
@@ -94,7 +94,7 @@ class App extends Component {
   }
 
   render() {
-    const { incompleteCount, currentUser } = this.props;
+    const { currentUser } = this.props;
     const isChatting = this.state.receiver;
     const receiverName = isChatting && this.state.receiver.username;
     const isAddingFriends = this.state.selectedTab === 'Add Friends';
@@ -103,19 +103,19 @@ class App extends Component {
         <div id="stars" />
         <div id="stars2" />
         <div id="stars3" />
-        <Col s={12} m={6}>
-          <Card textClassName="message-list" className="panel large">
+        <Col s={12} m={6} offset={currentUser ? 'm1' : 'm3'}>
+          <Card id="message-panel" textClassName="message-list" className="panel large">
             <header>
               <h1>Meteor Chat {isChatting ? `with ${receiverName}` : ''}</h1>
               <AccountsUIWrapper currentUser={currentUser} />
             </header>
             <ul className="list">
               {!currentUser && <span id="sign-in">Sign in to Chat</span>}
-              {this.renderTasks()}
+              {this.renderMessages()}
             </ul>
 
             { currentUser &&
-              <form className="new-task" onSubmit={this.handleSubmit} >
+              <form className="new-message" onSubmit={this.handleSubmit} >
                 <input
                   type="text"
                   disabled={!isChatting}
@@ -126,23 +126,25 @@ class App extends Component {
             }
           </Card>
         </Col>
-        <Col s={12} m={6}>
-          <Card className="panel">
-            <header>
-              <h1>{this.state.selectedTab}</h1>
-              <Button
-                floating
-                className="btn-navigation"
-                icon={isAddingFriends ? 'chevron_left' : 'add'}
-                onClick={() => this.setState({ selectedTab: (isAddingFriends ? 'Friends' : 'Add Friends') })}
-              >
-                Add Friends
-              </Button>
-            </header>
-            <ul className="list">
-              {this.renderUsers()}
-            </ul>
-          </Card>
+        <Col s={12} m={4}>
+          { currentUser &&
+            <Card id="" className="panel">
+              <header>
+                <h1>{this.state.selectedTab}</h1>
+                <Button
+                  floating
+                  className="btn-navigation"
+                  icon={isAddingFriends ? 'chevron_left' : 'add'}
+                  onClick={() => this.setState({ selectedTab: (isAddingFriends ? 'Friends' : 'Add Friends') })}
+                >
+                  Add Friends
+                </Button>
+              </header>
+              <ul className="list">
+                {this.renderUsers()}
+              </ul>
+            </Card>
+          }
         </Col>
         <footer>Made with ❤ by Ardhimas</footer>
       </Row>
@@ -155,18 +157,17 @@ App.defaultProps = {
 };
 
 App.propTypes = {
-  tasks: PropTypes.array.isRequired,
-  incompleteCount: PropTypes.number.isRequired,
+  messages: PropTypes.array.isRequired,
   currentUser: PropTypes.object,
   allUsers: PropTypes.array.isRequired,
 };
 
 export default createContainer(() => {
-  Meteor.subscribe('tasks');
+  Meteor.subscribe('messages');
   Meteor.subscribe('users');
   return {
-    tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    incompleteCount: Tasks.find({ isChecked: { $ne: true } }).count(),
+    messages: Messages.find({}, { sort: { createdAt: -1 } }).fetch(),
+    unreadCount: Messages.find({ isChecked: { $ne: true } }).count(),
     currentUser: Meteor.user(),
     allUsers: Users.find({}).fetch(),
   };

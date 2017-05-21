@@ -10,13 +10,7 @@ export default class User extends Component {
     super();
     this.addFriend = this.addFriend.bind(this);
     this.removeFriend = this.removeFriend.bind(this);
-    this.togglePrivate = this.togglePrivate.bind(this);
-    this.toggleChecked = this.toggleChecked.bind(this);
     this.handleStartChat = this.handleStartChat.bind(this);
-  }
-  toggleChecked() {
-    // Set the isChecked property to the opposite of its current value
-    Meteor.call('users.setChecked', this.props.user._id, !this.props.user.isChecked);
   }
 
   addFriend() {
@@ -27,10 +21,6 @@ export default class User extends Component {
     Meteor.call('users.removeFriend', this.props.user._id);
   }
 
-  togglePrivate() {
-    Meteor.call('users.setPrivate', this.props.user._id, !this.props.user.isPrivate);
-  }
-
   handleStartChat() {
     this.props.setReceiverId();
   }
@@ -38,8 +28,6 @@ export default class User extends Component {
   render() {
     const { username } = this.props.user;
     const { isFriend } = this.props;
-    // Give users a different className when they are isChecked off,
-    // so that we can style them nicely in CSS
     const userClassName = classnames({
       friend: isFriend,
     });
@@ -58,7 +46,7 @@ export default class User extends Component {
           icon={isFriend ? 'close' : 'add'}
         />
         <span className="text">
-          <strong>{username}</strong>
+          {username}
         </span>
       </li>
     );

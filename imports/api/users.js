@@ -42,29 +42,4 @@ Meteor.methods({
       },
     });
   },
-  'users.setChecked': (userId, setChecked) => {
-    check(userId, String);
-    check(setChecked, Boolean);
-
-    const user = Users.findOne(userId);
-    if (user.isPrivate && user.ownerId !== Meteor.userId()) {
-      // If the user is isPrivate, make sure only the ownerId can check it off
-      throw new Meteor.Error('not-authorized');
-    }
-
-    Users.update(userId, { $set: { isChecked: setChecked } });
-  },
-  'users.setPrivate': (userId, setToPrivate) => {
-    check(userId, String);
-    check(setToPrivate, Boolean);
-
-    const user = Users.findOne(userId);
-
-    // Make sure only the user ownerId can make a user isPrivate
-    if (user.ownerId !== Meteor.userId()) {
-      throw new Meteor.Error('not-authorized');
-    }
-
-    Users.update(userId, { $set: { isPrivate: setToPrivate } });
-  },
 });

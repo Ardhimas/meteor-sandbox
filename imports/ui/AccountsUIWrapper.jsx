@@ -36,7 +36,7 @@ AccountsUIWrapper.propTypes = {
 };
 
 export default createContainer(() => {
-  Meteor.subscribe('tasks');
+  Meteor.subscribe('messages');
   // console.log('Meteor.user()', Meteor.user());
 
   return {
