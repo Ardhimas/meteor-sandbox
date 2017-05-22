@@ -10,8 +10,8 @@ import User from './User.jsx';
 
 import { filterFriends, filterNotFriends } from '../utils.js';
 
-// App component - represents the whole app
-class App extends Component {
+// UsersPanel component - represents the whole UsersPanel
+class UsersPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,11 +78,11 @@ class App extends Component {
   }
 }
 
-App.defaultProps = {
+UsersPanel.defaultProps = {
   currentUser: null,
 };
 
-App.propTypes = {
+UsersPanel.propTypes = {
   currentUser: PropTypes.object,
   allUsers: PropTypes.array.isRequired,
   setReceiver: PropTypes.func.isRequired,
@@ -94,4 +94,4 @@ export default createContainer(() => {
     currentUser: Meteor.user(),
     allUsers: Users.find({}).fetch(),
   };
-}, App);
+}, UsersPanel);
